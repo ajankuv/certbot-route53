@@ -26,7 +26,7 @@ else
   if [ -z "${HOSTED_ZONE_ID}" ]; then
     # CERTBOT_DOMAIN is a hostname, not a domain (zone)
     # We strip out the hostname part to leave only the domain
-    DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${CERTBOT_DOMAIN}")"
+    DOMAIN="$(sed -E 's/^[^.]+.(.*)$/\1/' <<< "${CERTBOT_DOMAIN}")"
 
     printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${DOMAIN}"
 
@@ -42,22 +42,35 @@ else
     exit 1
   fi
 
+  TMPFILE=$(mktemp /tmp/temporary-file.XXXXXXXX)
+    cat > ${TMPFILE} << EOF
+    {
+      "Changes":[
+        {
+          "Action":"${ACTION}",
+          "ResourceRecordSet":{
+            "ResourceRecords":[
+              {
+                "Value": "\"$CERTBOT_VALIDATION\""
+              }
+            ],
+            "Name":"_acme-challenge.${CERTBOT_DOMAIN}.",
+            "Type":"TXT",
+            "TTL":30
+          }
+        }
+      ]
+    }
+EOF
+
   aws route53 wait resource-record-sets-changed --id "$(
     aws route53 change-resource-record-sets \
     --hosted-zone-id "${HOSTED_ZONE_ID}" \
     --query ChangeInfo.Id --output text \
-    --change-batch "{
-      \"Changes\": [{
-        \"Action\": \"${ACTION}\",
-        \"ResourceRecordSet\": {
-          \"Name\": \"_acme-challenge.${CERTBOT_DOMAIN}.\",
-          \"ResourceRecords\": [{\"Value\": \"\\\"${CERTBOT_VALIDATION}\\\"\"}],
-          \"Type\": \"TXT\",
-          \"TTL\": 30
-        }
-      }]
-    }"
+    --change-batch file://"${TMPFILE}"
   )"
 
+  # Clean up
+  rm $TMPFILE
   echo 1
 fi

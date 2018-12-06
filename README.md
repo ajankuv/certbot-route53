@@ -1,18 +1,19 @@
-certbot-route53
+certbot-route53 for osx
 ===============
 
-**NOTE: If you're already using Route53, you're propbably better off using [AWS Certificate Manager](https://aws.amazon.com/certificate-manager/), which was released after this script.**
+**NOTE: This is only for OSX the linux version can be found [Here][https://github.com/jed/certbot-route53].**
 
 This shell script helps create [Let's Encrypt][] certificates for [AWS Route53][]. It uses [Certbot][] to automate certificate requests, and the [AWS CLI][] to automate DNS challenge record creation.
 
 Installation and Usage
 ----------------------
+1. Ensure you have the updated sed from [Homebrew][] (`brew install gnu-sed`)
 
-1. Install Certbot and the AWS CLI. You can use [Homebrew][] (`brew install awscli certbot`) or [pip][] (`pip install awscli certbot`).
+2. Install Certbot and the AWS CLI. You can use [Homebrew][] (`brew install awscli certbot`) or [pip][] (`pip install awscli certbot`).
 
-2. [Configure the AWS CLI][]. Your account must have permission to list and update Route53 records.
+3. [Configure the AWS CLI][]. Your account must have permission to list and update Route53 records.
 
-3. Download the [certbot-route53.sh][] script.
+4. Download the [certbot-route53.sh][] script.
 
     ```sh
     mkdir my-certificates
@@ -21,7 +22,7 @@ Installation and Usage
     chmod a+x certbot-route53.sh
     ```
 
-4. Run the script with your (comma-separated) domain(s) and email address:
+5. Run the script with your (comma-separated) domain(s) and email address:
 
     ```sh
     sh certbot-route53.sh \
@@ -31,14 +32,14 @@ Installation and Usage
       --email $(git config user.email)
     ```
 
-5. Wait patiently (usually about two minutes) while, for each domain requested:
+6. Wait patiently (usually about two minutes) while, for each domain requested:
 
     - Certbot asks Let's Encrypt for a DNS validation challenge string,
     - AWS CLI asks Route53 to create a domain TXT record with the challenge value,
     - Let's Encrypt validates the TXT record and returns a certificate, and finally
     - AWS CLI asks Route53 to delete the TXT record.
 
-6. Find your new certificate(s) in the `letsencrypt/live` directory.
+7. Find your new certificate(s) in the `letsencrypt/live` directory.
 
 ![terminal](https://cloud.githubusercontent.com/assets/4433/23584470/9306b8ac-0130-11e7-9ffc-ef7d91971620.png)
 
@@ -50,4 +51,3 @@ Installation and Usage
 [pip]: https://pypi.python.org/pypi/pip
 [certbot-route53.sh]: https://git.io/vylLx
 [Configure the AWS CLI]: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
-
