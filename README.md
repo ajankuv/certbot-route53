@@ -1,7 +1,7 @@
 certbot-route53 for osx
 ===============
 
-**NOTE: This is only for OSX the linux version can be found [Here][https://github.com/jed/certbot-route53].**
+**NOTE: This is only for OSX the linux version can be found [Here][].**
 
 This shell script helps create [Let's Encrypt][] certificates for [AWS Route53][]. It uses [Certbot][] to automate certificate requests, and the [AWS CLI][] to automate DNS challenge record creation.
 
@@ -18,7 +18,7 @@ Installation and Usage
     ```sh
     mkdir my-certificates
     cd my-certificates
-    curl -sL https://git.io/vylLx -o certbot-route53.sh
+    curl -sL https://git.io/fpMeL -o certbot-route53.sh
     chmod a+x certbot-route53.sh
     ```
 
@@ -28,7 +28,7 @@ Installation and Usage
     sh certbot-route53.sh \
       --agree-tos \
       --manual-public-ip-logging-ok \
-      --domains jed.is,www.jed.is \
+      --domains *.jedicloudsolutions.com \
       --email $(git config user.email)
     ```
 
@@ -49,5 +49,6 @@ Installation and Usage
 [AWS CLI]: https://aws.amazon.com/cli/
 [Homebrew]: https://brew.sh/
 [pip]: https://pypi.python.org/pypi/pip
-[certbot-route53.sh]: https://git.io/vylLx
+[certbot-route53.sh]: https://git.io/fpMeL
 [Configure the AWS CLI]: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
+[Here]: https://github.com/jed/certbot-route53
